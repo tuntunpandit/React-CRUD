@@ -2,3 +2,11 @@
     height: 90%;
     width: 100px;
 }
+.cross {
+    cursor: pointer;
+    font-weight: 600;
+    transition: all .3s ease-out;
+}
+.cross:hover {
+    transform: scale(1.6)
+}

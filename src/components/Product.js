@@ -1,5 +1,5 @@
 import "./product.css";
-const Product = ({ product, updateProduct }) => {
+const Product = ({ product, updateProduct, deleteProduct }) => {
   return (
     <>
       <div className="card my-4">
@@ -21,6 +21,12 @@ const Product = ({ product, updateProduct }) => {
               onClick={() => updateProduct(product.id)}
             >
               Edit
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={() => deleteProduct(product.id)}
+            >
+              Delete
             </button>
           </div>
         </div>

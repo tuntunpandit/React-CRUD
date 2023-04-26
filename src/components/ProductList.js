@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Product from "./Product";
+import "./product.css";
 import AddEditProduct from "./AddEditProduct";
 // import { useNavigate } from "react-router-dom";
 
@@ -17,8 +18,7 @@ const ProductList = () => {
     axios
       .get("http://localhost:8000/products")
       .then((res) => {
-        console.log(res.data);
-        setProducts(res.data);
+        setProducts(res.data.reverse());
       })
       .catch((err) => {
         console.error("Error:", err);
@@ -28,6 +28,7 @@ const ProductList = () => {
   function addProduct() {
     setModalStatus(true);
     setAction("add");
+    setSelectedProduct([]);
   }
 
   function updateProduct(productId) {
@@ -36,6 +37,36 @@ const ProductList = () => {
     const selected = products.filter((product) => product.id === productId);
     setSelectedProduct(selected);
   }
+
+  function deleteProduct(productId) {
+    const permission = window.confirm("Are you sure?");
+    if (permission) {
+      axios
+        .delete(`http://localhost:8000/products/${productId}`)
+        .then((response) => {
+          if (response.status === 200) {
+            const newProductLists = products.filter(
+              (product) => product.id !== productId
+            );
+            setProducts(newProductLists);
+          }
+        })
+        .catch((err) => console.error(err));
+    }
+  }
+
+  function updateProductsList(product, prodAction) {
+    prodAction === "add"
+      ? setProducts(...products, product)
+      : updateSelectedProduct(product);
+  }
+
+  function updateSelectedProduct(product) {
+    const index = products.findIndex((item) => item.id === product.id);
+    console.log("index", index);
+    products[index] = product;
+    setProducts({ ...products });
+  }
   return (
     <>
       <div className="container">
@@ -43,7 +74,7 @@ const ProductList = () => {
           <div className="col-md-8 mt-5">
             <div className="d-flex justify-content-between align-items-center">
               <h2>Latest Products</h2>
-              <span>Total : {products.length}</span>
+              <span>Total : {products?.length}</span>
               <button className="btn btn-secondary" onClick={addProduct}>
                 Add Product
               </button>
@@ -53,13 +84,23 @@ const ProductList = () => {
                 key={product.id}
                 product={product}
                 updateProduct={updateProduct}
+                deleteProduct={deleteProduct}
               />
             ))}
           </div>
           {modalStatus ? (
             <div className="col-md-4 ps-5 mt-5">
-              <h2 className="text-capitalize">{action} Product</h2>
-              <AddEditProduct action={action} product={selectedProduct} />
+              <div className="d-flex justify-content-between align-items-center">
+                <h2 className="text-capitalize">{action} Product</h2>
+                <span className="cross" onClick={() => setModalStatus(false)}>
+                  X
+                </span>
+              </div>
+              <AddEditProduct
+                action={action}
+                product={selectedProduct}
+                updateProductsList={updateProductsList}
+              />
             </div>
           ) : null}
         </div>
