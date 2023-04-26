@@ -1,8 +1,8 @@
 Open your terminal and type these:
 
-1. `git clone https://github.com/tuntunpandit/tvs-assignment.git`
+1. `git clone https://github.com/tuntunpandit/React-CRUD`
 2. `npm install`
-3. `ng serve -o`
+3. `npm run start`
 
 ## Live Demo : <a href="https://react-crud-tuntunpandit.vercel.app/">Click Here!</a>
 
